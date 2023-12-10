@@ -1,1 +1,1 @@
-[gh-pages](https://shanegibney.github.io/vatriables-in-RAF)
+[gh-pages](https://shanegibney.github.io/variables-in-RAF)
