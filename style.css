@@ -1,0 +1,27 @@
+body {
+    background-color: rgba(255, 255, 255, 0.495);
+  }
+    p {
+      color: purple;
+    }
+    #mycanvas {
+    width:90vw;
+    height:90vh;
+    }
+    #acanvas {
+      width:30vw;
+      height:30vh;
+      }
+.box {
+        width: 400px;
+        height: 250px;
+        border: 2px solid darkblue;
+        background-color: red;
+        color: white;
+        font:
+          16px "Zilla",
+          "Open Sans",
+          "Helvetica",
+          "Arial",
+          sans-serif;
+      }

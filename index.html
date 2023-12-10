@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Javascript General</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <input type="button" value="Reload page" onclick="window.location.reload();">
+
+  <canvas id="canvas2" width="800" height="300" style='border:2px dashed #0000FF;'></canvas>ctx2
+    <input id="ani" type="button" value="Animate bouncing ball"
+    onclick="toggleanimation();"/>
+    <br>Background:<input type="color" id="bgball" value=#E5E5E5 name="bgball">
+cp <style></style>
+
+<script>
+
+
+
+const canvas2 = document.getElementById("canvas2");
+const ctx2 = canvas2.getContext("2d");//ball
+let n = 100;
+let o = 100;
+let dx = 4; //velocity of ball in x-direction
+let dy = 4; //velocity of ball in y-direction
+let radius = 20;
+let lPause = true;
+
+//ctx2 bouncing ball animation
+function animation(){
+
+  if (!lPause)
+     requestAnimationFrame(animation);
+let bgcolour = document.getElementById("bgball").value;
+
+  ctx2.clearRect(0,0,innerWidth,innerHeight);
+  ctx2.beginPath();
+ctx2.fillStyle = bgcolour;
+ctx2.rect(0, 0, innerWidth, innerHeight);
+ctx2.fill();
+ctx2.closePath();
+  ctx2.beginPath();
+ctx2.fillStyle = "green";
+ctx2.arc(n , o, radius, 0, 2 * Math.PI);
+ctx2.fill();
+ctx2.closePath();
+ctx2.beginPath();
+ctx2.strokeStyle = "black";
+ctx2.lineWidth = 2;
+ctx2.arc(n , o, radius, 0, 2 * Math.PI);
+ctx2.stroke();
+ctx2.closePath();
+  if (n + radius > canvas2.width || n - radius < 0){
+    dx = -dx;
+  }
+
+  if (o + radius > canvas2.height || o - radius < 0){
+    dy = -dy;
+  }
+
+  n += dx;
+  o += dy;
+  
+}
+
+function toggleanimation() {
+  if (lPause)
+    {  lPause = false;
+	   requestAnimationFrame(animation);
+	   document.getElementById("ani").value = "Pause bouncing ball";
+    }
+  else
+    {  lPause = true;
+	   document.getElementById("ani").value = "Animate bouncing ball";
+    }
+}
+</script>
+</body>
+</html>
