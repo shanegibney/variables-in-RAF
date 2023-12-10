@@ -7,208 +7,75 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <input type="button" value="Reload page" onclick="window.location.reload();">
-<hr>
-<canvas id='canvas4' width="700" height="450" style='border:2px dashed#f1a335;'></canvas>ctx4<br>
-<input id="sin" type="button" value="Circular to1 linear motion" onclick="toggleshow();"/>
-<input id="bgmotion" type="color" value=#D2B48C name="bgmotion"/>
+<br>
+  <canvas id="canvas2" width="800" height="300" style='border:2px dashed #0000FF;'></canvas>ctx2<br>
+    <input id="ani" type="button" value="Animate bouncing ball"
+    onclick="toggleanimation();"/>
+    <br>Background:<input type="color" id="bgball" value=#1B6B6F name="bgball">
+<style></style>
 
-<div>Radians and degrees. Starting at the top. Restarts every cycle.</div>
- <div id="top">Radians</div><br>
-<div id="bottom">Degrees</div>
-
-    <script>
+<script>
 
 
-//const canvas = document.getElementById("canvas4");
-//const ctx4 = canvas.getContext("2d");
 
-const canvas4 = document.getElementById("canvas4");
-const ctx4 = canvas4.getContext("2d"); 
+const canvas2 = document.getElementById("canvas2");
+const ctx2 = canvas2.getContext("2d");//ball
+let n = 100;
+let o = 100;
+let dx = 4; //velocity of ball in x-direction
+let dy = 4; //velocity of ball in y-direction
+let radius = 20;
+let lPause = true;
 
+//ctx2 bouncing ball animation
+function animation(){
 
-//Generate random numbers
-let min = 0;
-let max = 0;
+  if (!lPause)
+     requestAnimationFrame(animation);
+let bgcolour = document.getElementById("bgball").value;
 
-function generateRandomInteger(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+  ctx2.clearRect(0,0,innerWidth,innerHeight);
+  ctx2.beginPath();
+ctx2.fillStyle = bgcolour;
+ctx2.rect(0, 0, innerWidth, innerHeight);
+ctx2.fill();
+ctx2.closePath();
+  ctx2.beginPath();
+ctx2.fillStyle = "green";
+ctx2.arc(n , o, radius, 0, 2 * Math.PI);
+ctx2.fill();
+ctx2.closePath();
+ctx2.beginPath();
+ctx2.strokeStyle = "black";
+ctx2.lineWidth = 2;
+ctx2.arc(n , o, radius, 0, 2 * Math.PI);
+ctx2.stroke();
+ctx2.closePath();
+  if (n + radius > canvas2.width || n - radius < 0){
+    dx = -dx;
+  }
+
+  if (o + radius > canvas2.height || o - radius < 0){
+    dy = -dy;
+  }
+
+  n += dx;
+  o += dy;
+  
 }
 
-       
-let theta = 0;
-let d = 0;
-let F = 0;
-let a = 0;
-let v2 =0;
-let m1 = 0;
-let m2 = 0;
-let g = 0;
-let x1 = 10;
-let y1 = 100;
-let x2 = 100;
-let y2 = 50;
-let r1 = 10;
-let r2 = 10;
-let arrA = [];
-//let rev = 0.04;//Speed of revolution
-let nn = 0.5;//How spread out wave is
-let amp = 40;//Amplitude of wave
-let nudgeHorizontally = 40;
-let nudgeVertically = 40;
-let kk = 0;
-let countFrames = 0;
-let pauseShow = true;
-//circular to linear motion---------------------
-function show(){
-if (!pauseShow)
-requestAnimationFrame(show);
-//The following six commented lines are irrelevant to this
-//d=Math.sqrt(Math.pow((x2-x1),2)+Math.pow((y2-y1),2));//pythagoras
-//F=g*m1*m2/pow(d,2);//Universal law of gravitation
-//m1 and m2 must be dependent on r1 and r2 respectively
-//a=F/m(rsun);//Newton's 2nd Law where m depends on mass of object you're travelling around
-//From a=(v2-v1)/t we have v2=at+v1. The t in this should be t3
-//v1=/(x2-x1)/t The here should be t1 not the same as the above t3.
-//Draw background----------------
-//ctx4.beginPath();
-//ctx4.fillStyle = "red";
-//ctx4.fillRect(100,100,100,100);
-//ctx4.fillRect(0, 0, innerWidth, innerHeight);//draw a background rectangle
-//ctx4.fill();//fill() closes the path anyway, there shouldn't be any need for closePath();
-//ctx4.closePath();
-
-ctx4.beginPath();
-ctx4.fillStyle = "orange";
-ctx4.arc(62.5+nudgeHorizontally, 62.5+nudgeVertically, amp, 0, 2 * Math.PI);
-/*ctx4.fillStyle = "blue";
-ctx4.arc(62.5+nudgeHorizontally, 62.5+nudgeVertically, 5, 0, 2 * Math.PI);*/
-ctx4.closePath();
- //Degrees and Radians------
-x2 = amp * Math.sin(theta) + 62.5;//Theta must be in radians. 45 radius of circle in x direction. 62.5 is x-coordinate of centre of circle. 
-y2 = amp * Math.cos(theta + Math.PI) + 62.5;//Theta must be in radians. 45 radius of circle in y direction. 62.5 is y-coordinate of centre of circle. 
-//Fill array----------------
-ctx4.beginPath();
-ctx4.lineWidth = 2;
-ctx4.strokeStyle = 'black';
-arrA.unshift(y2);//add element to beginning with value y2
-arrA.push('');//creates an empty element at the end of the array so that kk+1 on the next line exists
-for(kk=arrA.length-1; kk>-1; kk--){//Reverse loop
-arrA[kk+1]=arrA[kk];//moves the wave to the right one element
-}
-if(countFrames<500){
-arrA[0]=y2;//Actually adds the y-value to the array to the empty element
-arrA.pop();//Remove last element of array
-}else{
-arrA.pop();//one element needs to be popped off the end to keep the array the same lenght as it moves right
-arrA.pop();//one element needs to be popped off the end as an element is unshifted or added to the front of the array
-arrA.pop();//one element needs to be popped off the end as an element is pushed or added to the end of the array
-//<array>.unshifted(<value>) - added to the front of an Array//
-//<array>.shifted() - removed from the front of an array
-//<array>.push(<value>) - add to the end of an array
-//<array>.pop() - remove from the end of an array
-}
-//Large Main circle------
-ctx4.beginPath();
-ctx4.fillStyle = "green";
-ctx4.arc(62.5+nudgeHorizontally, 62.5+nudgeVertically, amp, 0, 2 * Math.PI);
-ctx4.fill();
-//Draw wave or the array-------------
-ctx4.beginPath();
-ctx4.moveTo(62.5 + nudgeHorizontally - amp,y2 + nudgeVertically);//tip of pen on left end
-for(let kkk=0; kkk<arrA.length; kkk++){//forward loop
-let bgmotion = document.getElementById("bgmotion").value;
-ctx4.fillStyle = bgmotion;//background colour
-ctx4.fillRect(0,0,innerWidth,innerHeight);
-ctx4.fillStyle = "black";
-ctx4.lineTo(112.5+80+(kkk*nn)+20+nudgeHorizontally,arrA[kkk]+nudgeVertically);//tip of pen on right end, start of wave,nn is spread of wave
-}
-ctx4.stroke();
-//Blue air in piston-------------------
-ctx4.beginPath();
-ctx4.fillStyle = "blue";
-ctx4.fillRect(45 + nudgeHorizontally, 303 + 2*nudgeVertically, 30, y2-218);
-ctx4.fill();
-//Large Main circle------
-ctx4.beginPath();
-ctx4.fillStyle = "lightgrey";
-ctx4.arc(62.5+nudgeHorizontally, 62.5+nudgeVertically, amp, 0, 2 * Math.PI);
-ctx4.fill();
-//Centre of large orange circle------
-ctx4.beginPath();
-ctx4.fillStyle = "red";
-ctx4.arc(62.5+nudgeHorizontally, 62.5+nudgeVertically, 5, 0, 2 * Math.PI);
-ctx4.fill();
-//ctx4.stroke();
-//Rim of large orange circle-------------
-ctx4.beginPath();
-ctx4.strokeStyle = "black";
-ctx4.arc(62.5+nudgeHorizontally, 62.5+nudgeVertically, amp, 0, 2 * Math.PI);
-ctx4.stroke();
-//Piston-----------------------
-ctx4.beginPath();
-ctx4.lineWidth = 4;
-ctx4.moveTo(x2+nudgeHorizontally,y2+nudgeVertically);//centre of red circle on edge of orange circle
-ctx4.lineTo(62.5+nudgeHorizontally,y2 + 70+nudgeVertically);//elbow at edge of circle
-ctx4.lineTo(62.5 + nudgeVertically,y2 + 200 + nudgeVertically);//top of piston box
-ctx4.moveTo(62.5-15 + nudgeHorizontally,180 + nudgeVertically);//top left corner
-ctx4.lineTo(62.5-15 + nudgeHorizontally,380 + nudgeVertically);// bottom left corner
-ctx4.lineTo(62.5+15 + nudgeHorizontally,380 + nudgeVertically);// bottom right corner
-ctx4.lineTo(62.5+15 + nudgeHorizontally,220 + nudgeVertically);// top right corner
-ctx4.lineTo(62.5-15 + nudgeHorizontally,220 + nudgeVertically);// top left corner to finish
-ctx4.moveTo(62.5+15 + nudgeHorizontally,y2 + 200 + nudgeVertically);//Top of piston right
-ctx4.lineTo(62.5-15 + nudgeHorizontally,y2 + 200 + nudgeVertically);//Top of piston left
-//ctx4.moveTo(x2 + nudgeHorizontally,y2 + nudgeVertically);//Move to centre of red revolving circle
-//ctx4.lineTo(62.5 + nudgeHorizontally - amp,y2 + nudgeVertically);//left side of arm
-//ctx4.lineTo(112.5+20 + 2*nudgeHorizontally,y2 + nudgeVertically);//right side of arm
-ctx4.moveTo(62.5 + nudgeHorizontally,62.5 + nudgeVertically);//center of orange circle
-ctx4.lineTo(x2 + nudgeHorizontally,y2 + nudgeVertically);//arm from centre to revolving circle
-ctx4.stroke();
-//Elbow of piston--------------------
-ctx4.beginPath();
-ctx4.fillStyle = "red";
-ctx4.arc(62.5 + nudgeHorizontally, y2 + 70 + nudgeVertically, 5, 0, 2 * Math.PI);//elbow
-ctx4.fill();
-//Degrees to radians-----------------------
-document.getElementById("top").innerHTML = theta.toFixed(1)+ 'rads';//starting at the top
-document.getElementById("bottom").innerHTML = (theta * (180/Math.PI)).toFixed(1)+'&deg';
-//Centre of revolving circle--------------
-ctx4.beginPath();
-ctx4.fillStyle = "red";
-ctx4.arc(x2 + nudgeHorizontally, y2 + nudgeVertically, 5, 0, 2 * Math.PI);
-ctx4.fill();
-//Speed of revolution-------------------
-//let rev = document.getElementById("speed").value;
-let rev = 0.04;
-theta += rev;//speed
-if(theta>(2*Math.PI)){
-  theta=0;//starts again after 1 revolution
-}
-countFrames++;
-}//closes the function show()
-
-
-function toggleshow() {//4th canvas ctx4 Circular to linear motion
-  if (pauseShow)
-    {  pauseShow = false;
-	   requestAnimationFrame(show);
-	   document.getElementById("sin").value = "Pause";
+function toggleanimation() {
+  if (lPause)
+    {  lPause = false;
+	   requestAnimationFrame(animation);
+	   document.getElementById("ani").value = "Pause bouncing ball";
     }
   else
-    {  pauseShow = true;
-	   document.getElementById("sin").value = "Circular to3 linear motion";
+    {  lPause = true;
+	   document.getElementById("ani").value = "Animate bouncing ball";
     }
 }
-
-/*
-function toggleshow() {//4th canvas ctx4 Circular to linear motion
-  if (pauseShow)
-    {  pauseShow = false;
-    }
-}*/
-    </script>
+</script>
 </body>
 </html>
