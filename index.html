@@ -10,72 +10,61 @@
   <input type="button" value="Reload page" onclick="window.location.reload();">
 <br>
   <canvas id="canvas2" width="800" height="300" style='border:2px dashed #0000FF;'></canvas>ctx2<br>
-    <input id="ani" type="button" value="Animate bouncing ball"
+    <input id="ani" type="button" value="Animate: changing ball"
     onclick="toggleanimation();"/>
-    <br>Background:<input type="color" id="bgball" value=#1B6B6F name="bgball">
-<style></style>
-
+    <br>Background:<input type="color" id="bgball" value=#20D7DC name="bgball">
 <script>
-
-
-
 const canvas2 = document.getElementById("canvas2");
-const ctx2 = canvas2.getContext("2d");//ball
-let n = 100;
-let o = 100;
-let dx = 4; //velocity of ball in x-direction
-let dy = 4; //velocity of ball in y-direction
-let radius = 20;
+const ctx2 = canvas2.getContext("2d");
+let radius = 1;
 let lPause = true;
-
-//ctx2 bouncing ball animation
+let dir = 1;
+let count = 0;
+let step = 1;
 function animation(){
-
   if (!lPause)
      requestAnimationFrame(animation);
 let bgcolour = document.getElementById("bgball").value;
-
   ctx2.clearRect(0,0,innerWidth,innerHeight);
-  ctx2.beginPath();
+  ctx2.beginPath();//background
 ctx2.fillStyle = bgcolour;
 ctx2.rect(0, 0, innerWidth, innerHeight);
 ctx2.fill();
+if(count%180==0){
+  step=-step;
+}
+if(step>0){
 ctx2.closePath();
-  ctx2.beginPath();
+  ctx2.beginPath();//dot
 ctx2.fillStyle = "green";
-ctx2.arc(n , o, radius, 0, 2 * Math.PI);
+ctx2.arc(100, 100, radius, 0, 2 * Math.PI);
 ctx2.fill();
 ctx2.closePath();
-ctx2.beginPath();
-ctx2.strokeStyle = "black";
+ctx2.beginPath();//rim
+ctx2.strokeStyle = "blue";
 ctx2.lineWidth = 2;
-ctx2.arc(n , o, radius, 0, 2 * Math.PI);
+ctx2.arc(100 , 100, radius, 0, 2 * Math.PI);
 ctx2.stroke();
 ctx2.closePath();
-  if (n + radius > canvas2.width || n - radius < 0){
-    dx = -dx;
+  if (radius > 40 || radius == 0){
+    dir=-dir;
   }
-
-  if (o + radius > canvas2.height || o - radius < 0){
-    dy = -dy;
-  }
-
-  n += dx;
-  o += dy;
-  
+  radius = radius+(0.25*dir);
+  count++;
 }
-
+}
 function toggleanimation() {
   if (lPause)
     {  lPause = false;
 	   requestAnimationFrame(animation);
-	   document.getElementById("ani").value = "Pause bouncing ball";
+	   document.getElementById("ani").value = "Pause: changing ball";
     }
   else
     {  lPause = true;
-	   document.getElementById("ani").value = "Animate bouncing ball";
+	   document.getElementById("ani").value = "Animate: changing ball";
     }
 }
+
 </script>
 </body>
 </html>
